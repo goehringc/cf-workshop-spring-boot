@@ -1,7 +1,6 @@
 applications:
 - name: boot-app
-#  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v3.12
-  instances: 1
+  buildpack: java_buildpack_offline
   random-route: true
   memory: 1G
   path: ./target/cf-workshop-spring-boot-0.0.3-SNAPSHOT.jar
