@@ -3,7 +3,7 @@ resources:
 - name: git-repo
   type: git
   source:
-    uri: https://github.com/dbeauregard/cf-workshop-spring-boot
+    uri: https://github.com/goehringc/cf-workshop-spring-boot
     branch: master
     
 - name: artifacts
@@ -12,7 +12,7 @@ resources:
     bucket: boot-app-artifact-repository
     regexp: boot-app-(.*).jar
     access_key_id: {{S3-ACCESS-KEY}}
-    secret_access_key: {{S3-SECRET}}
+    secret_access_key: ((S3-SECRET))
 
 - name: version
   type: semver
@@ -20,7 +20,7 @@ resources:
     bucket: boot-app-artifact-repository
     key: current-version
     access_key_id: {{S3-ACCESS-KEY}}
-    secret_access_key: {{S3-SECRET}}
+    secret_access_key: ((S3-SECRET))
     initial_version: 1.0.0
 
 - name: cloudfoundry-staging
@@ -30,7 +30,7 @@ resources:
     skip_cert_check: true
     organization: {{cf-organization}}
     username: {{cf-username}}
-    password: {{cf-password}}
+    password: ((cf-password))
     space: {{cf-space-stage}}
     
 - name: cloudfoundry-prod
@@ -40,7 +40,7 @@ resources:
     skip_cert_check: true
     organization: {{cf-organization}}
     username: {{cf-username}}
-    password: {{cf-password}}
+    password: ((cf-password))
     space: {{cf-space-prod}}
 
 jobs:
@@ -72,8 +72,8 @@ jobs:
       - unit-pkg
   - put: cloudfoundry-staging
     params:
-      - manifest: git-repo/manifest.yml
-      - path: artifacts/boot-app-*.jar
+      manifest: git-repo/manifest.yml
+      path: artifacts/boot-app-*.jar
       
 - name: production
   plan:
@@ -85,6 +85,6 @@ jobs:
       - staging
   - put: cloudfoundry-prod
     params:
-      - manifest: git-repo/manifest.yml
-      - path: artifacts/boot-app-*.jar
-      - current_app_name: boot-app-derek-prod
+      manifest: git-repo/manifest.yml
+      path: artifacts/boot-app-*.jar
+      current_app_name: boot-app-prod
